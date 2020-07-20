@@ -21,6 +21,6 @@ const xml = fs.readFileSync('./query.xml');
     body,
     statusCode
   } = response
-  fs.writeFileSync('response.xml', body)
+  fs.writeFileSync('response.xml', body.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;"))
   console.log(statusCode)
 })()
