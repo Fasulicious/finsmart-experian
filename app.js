@@ -18,11 +18,9 @@ const xml = fs.readFileSync('./query.xml');
     headers: requestHeaders
   })
   const {
-    headers,
     body,
     statusCode
   } = response
-  console.log(headers)
-  console.log(body)
+  fs.writeFileSync('response.xml', body)
   console.log(statusCode)
 })()
