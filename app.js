@@ -24,8 +24,8 @@ const xml = fs.readFileSync('./query.xml');
   } = response
   //fs.writeFileSync('response.xml', body.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"'))
   //fs.writeFileSync('response.json', parser.toJson(body))
-  const bodyJson = convert.xml2json(body, { compact: true })
-  const info = bodyJson['soapenv:Envelope']['soapenv:Body']['ns1:consultarResponse']['consultarReturn']['_text']
+  const bodyJson = JSON.parse(convert.xml2json(body, { compact: true }))
+  const info = JSON.parse(bodyJson['soapenv:Envelope']['soapenv:Body']['ns1:consultarResponse']['consultarReturn']['_text'])
   console.log(info)
   console.log(statusCode)
 })()
