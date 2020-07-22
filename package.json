@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "easy-soap-request": "^3.3.2",
-    "esm": "^3.2.25"
+    "esm": "^3.2.25",
+    "xml2json": "^0.12.0"
   }
 }

@@ -2,6 +2,7 @@
 
 import soapRequest from 'easy-soap-request'
 import fs from 'fs'
+import parser from 'xml2json'
 
 const url = 'https://demo-servicesesb.experian.com.pe/dhws/services/DHService?wsdl'
 
@@ -21,6 +22,7 @@ const xml = fs.readFileSync('./query.xml');
     body,
     statusCode
   } = response
-  fs.writeFileSync('response.xml', body.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"'))
+  //fs.writeFileSync('response.xml', body.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"'))
+  fs.writeFileSync('response.json', parser.toJson(body))
   console.log(statusCode)
 })()
