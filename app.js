@@ -10,7 +10,7 @@ const requestHeaders = {
   'Content-Type': 'text/html',
   'soapAction': 'GET'
 }
-const xml = fs.readFileSync('./query.xml');
+const xml = fs.readFileSync('./company.xml');
 
 (async () => {
   const { response } = await soapRequest({
