@@ -15,6 +15,8 @@ router.get('/:ruc', async ctx => {
   const xml = makeXMLBody(ruc)
   const { response: { body, statusCode } } = await makeXMLRequest(xml)
   const data = xml2json(body)
+  const razonSocial = data.informe.infoRUC._attributes.tipoContribuyente
+  console.log(razonSocial)
   ctx.status = statusCode
   ctx.body = data
 })

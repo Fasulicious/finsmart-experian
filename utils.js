@@ -23,7 +23,7 @@ export const makeXMLBody = (ruc) => `<soapenv:Envelope xmlns:xsi="http://www.w3.
 export const makeXMLRequest = (xml) => {
   const headers = {
     'Content-Type': 'text/html',
-    'soapAction': 'GET'
+    soapAction: 'GET'
   }
 
   return soapRequest({
@@ -35,7 +35,7 @@ export const makeXMLRequest = (xml) => {
 
 export const xml2json = (body) => {
   const bodyJSON = JSON.parse(convert.xml2json(body, { compact: true }))
-  const data = bodyJSON['soapenv:Envelope']['soapenv:Body']['ns1:consultarResponse']['consultarReturn']['_text']
+  const data = bodyJSON['soapenv:Envelope']['soapenv:Body']['ns1:consultarResponse'].consultarReturn._text
   const dataJSON = JSON.parse(convert.xml2json(data, { compact: true }))
   return dataJSON
 }

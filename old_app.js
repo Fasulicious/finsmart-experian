@@ -8,7 +8,7 @@ const url = 'https://demo-servicesesb.experian.com.pe/dhws/services/DHService?ws
 
 const requestHeaders = {
   'Content-Type': 'text/html',
-  'soapAction': 'GET'
+  soapAction: 'GET'
 }
 const xml = fs.readFileSync('./company.xml');
 
@@ -23,7 +23,7 @@ const xml = fs.readFileSync('./company.xml');
     statusCode
   } = response
   const bodyJson = JSON.parse(convert.xml2json(body, { compact: true }))
-  const info = bodyJson['soapenv:Envelope']['soapenv:Body']['ns1:consultarResponse']['consultarReturn']['_text']
+  const info = bodyJson['soapenv:Envelope']['soapenv:Body']['ns1:consultarResponse'].consultarReturn._text
   const infoJson = JSON.parse(convert.xml2json(info, { compact: true }))
   console.log(infoJson.informe)
   fs.writeFileSync('response.json', JSON.stringify(infoJson.informe))
