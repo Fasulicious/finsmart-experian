@@ -4,14 +4,27 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node -r esm app.js",
+    "dev": "nodemon",
+    "lint": "standard",
+    "format": "standard --fix"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "easy-soap-request": "^3.3.2",
     "esm": "^3.2.25",
-    "xml-js": "^1.6.11",
-    "xml2json": "^0.12.0"
+    "koa": "^2.13.0",
+    "koa-body": "^4.2.0",
+    "koa-compress": "^5.0.1",
+    "koa-helmet": "^5.2.0",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^9.4.0",
+    "koa2-cors": "^2.0.6",
+    "xml-js": "^1.6.11"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4",
+    "standard": "^14.3.4"
   }
 }

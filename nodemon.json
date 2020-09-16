@@ -1,0 +1,4 @@
+{
+  "watch": ["./"],
+  "exec": "node -r esm app.js"
+}

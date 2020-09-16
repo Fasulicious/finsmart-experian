@@ -1,31 +1,37 @@
 'use strict'
 
-import soapRequest from 'easy-soap-request'
-import fs from 'fs'
-import convert from 'xml-js'
+import Koa from 'koa'
+import logger from 'koa-logger'
+import helmet from 'koa-helmet'
+import cors from 'koa2-cors'
+import body from 'koa-body'
+import compress from 'koa-compress'
 
-const url = 'https://demo-servicesesb.experian.com.pe/dhws/services/DHService?wsdl'
+import experian from './routes/experian'
 
-const requestHeaders = {
-  'Content-Type': 'text/html',
-  'soapAction': 'GET'
-}
-const xml = fs.readFileSync('./company.xml');
+const app = new Koa()
 
-(async () => {
-  const { response } = await soapRequest({
-    url,
-    xml,
-    headers: requestHeaders
-  })
-  const {
-    body,
-    statusCode
-  } = response
-  const bodyJson = JSON.parse(convert.xml2json(body, { compact: true }))
-  const info = bodyJson['soapenv:Envelope']['soapenv:Body']['ns1:consultarResponse']['consultarReturn']['_text']
-  const infoJson = JSON.parse(convert.xml2json(info, { compact: true }))
-  console.log(infoJson.informe)
-  fs.writeFileSync('response.json', JSON.stringify(infoJson.informe))
-  console.log(statusCode)
-})()
+app.use(cors())
+app.use(body())
+app.use(logger())
+app.use(helmet())
+app.use(compress())
+
+app.use(async (ctx, next) => {
+  try {
+    await next()
+  } catch (e) {
+    console.log(e)
+    ctx.status = 500
+    ctx.body = {
+      error: {
+        body: 'unhandled error',
+        message: 'Something went wrong'
+      }
+    }
+  }
+})
+
+app.use(experian.routes())
+
+app.listen(3000, () => console.log(`Server listening on port 3000`))
