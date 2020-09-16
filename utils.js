@@ -35,7 +35,7 @@ export const makeXMLRequest = (xml) => {
 
 export const xml2json = (body) => {
   const bodyJSON = JSON.parse(convert.xml2json(body, { compact: true }))
-  const data = bodyJSON['soapenv:Envelope']['soapenv:Body']['ns1:consultarReponse']['consultarReturn']['_text']
+  const data = bodyJSON['soapenv:Envelope']['soapenv:Body']['ns1:consultarResponse']['consultarReturn']['_text']
   const dataJSON = JSON.parse(convert.xml2json(data, { compact: true }))
   return dataJSON
 }

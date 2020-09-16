@@ -15,8 +15,8 @@ router.get('/:ruc', async ctx => {
   const xml = makeXMLBody(ruc)
   const { response: { body, statusCode } } = await makeXMLRequest(xml)
   const data = xml2json(body)
-  console.log(data)
   ctx.status = statusCode
+  ctx.body = data
 })
 
 export default router
