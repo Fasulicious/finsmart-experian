@@ -4,7 +4,8 @@ import Router from 'koa-router'
 
 import {
   makeXMLBody,
-  makeXMLRequest
+  makeXMLRequest,
+  xml2json
 } from '../utils'
 
 const router = new Router({ prefix: '/experian' })
@@ -12,8 +13,9 @@ const router = new Router({ prefix: '/experian' })
 router.get('/:ruc', async ctx => {
   const { ruc } = ctx.params
   const xml = makeXMLBody(ruc)
-  const { body, statusCode } = await makeXMLRequest(xml)
-  console.log(body)
+  const { response: { body, statusCode } } = await makeXMLRequest(xml)
+  const data = xml2json(body)
+  console.log(data)
   ctx.status = statusCode
 })
 

@@ -1,6 +1,7 @@
 'use strict'
 
 import soapRequest from 'easy-soap-request'
+import convert from 'xml-js'
 
 const {
   experianURL
@@ -30,4 +31,11 @@ export const makeXMLRequest = (xml) => {
     xml,
     headers
   })
+}
+
+export const xml2json = (body) => {
+  const bodyJSON = JSON.parse(convert.xml2json(body, { compact: true }))
+  const data = bodyJSON['soapenv:Envelope']['soapenv:Body']['ns1:consultarReponse']['consultarReturn']['_text']
+  const dataJSON = JSON.parse(convert.xml2json(data, { compact: true }))
+  return dataJSON
 }
