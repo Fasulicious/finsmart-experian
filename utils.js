@@ -41,12 +41,14 @@ export const xml2json = (body) => {
 }
 
 export const getInfo = (data) => {
-  const razonSocial = data.informe.infoRuc ? data.informe.infoRuc._attributes.tipoContribuyente : null
-  const fechaCreacion = data.informe.infoRuc ? new Date(data.informe.infoRuc._attributes.fechaAlta - 5 * 60 * 60 * 1000).toString() : null
-  const padron = data.informe.buenosContribuyentes || null
+  const razonSocial = data.informe.infoRUC ? data.informe.infoRuc._attributes.tipoContribuyente : null
+  const fechaCreacion = data.informe.infoRUC ? new Date(data.informe.infoRuc._attributes.fechaAlta - 5 * 60 * 60 * 1000).toString() : null
+  const padron = data.informe.buenosContribuyentes ? true : false
+  const numTrabajadores = data.informe.otrosDatosEmpresa ? data.informe.otrosDatosEmpresa.slice(-1)[0]._attributes.numeroEmpleados : null
   return {
     razonSocial,
     fechaCreacion,
     padron,
+    numTrabajadores
   }
 }
