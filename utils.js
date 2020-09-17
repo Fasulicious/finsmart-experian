@@ -44,7 +44,17 @@ export const getInfo = (data) => {
   const razonSocial = data.informe.infoRUC ? data.informe.infoRUC._attributes.tipoContribuyente : null
   const fechaCreacion = data.informe.infoRUC ? new Date(data.informe.infoRUC._attributes.fechaAlta - 5 * 60 * 60 * 1000).toString() : null
   const padron = data.informe.buenosContribuyentes ? true : false
-  const numTrabajadores = data.informe.otrosDatosEmpresa ? data.informe.otrosDatosEmpresa.slice(-1)[0]._attributes.numeroEmpleados : null
+  //const numTrabajadores = data.informe.otrosDatosEmpresa ? parseInt(data.informe.otrosDatosEmpresa.slice(-1)[0]._attributes.numeroEmpleados, 10) : null
+  let numTrabajadores = null
+  if (data.informe.otrosDatosEmpresa) {
+    const otrosDatosEmpresa = [...data.informe.otrosDatosEmpresa]
+    otrosDatosEmpresa.sort((a, b) => {
+      if (a._attributes.periodo < b._attributes.periodo) return -1
+      if (a._attributes.periodo > b._attributes.periodo) return 1
+      return 0
+    })
+    numTrabajadores = otrosDatosEmpresa.slice(-1)[0]._attributes.numeroEmpleados
+  }
   return {
     razonSocial,
     fechaCreacion,
