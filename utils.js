@@ -43,8 +43,7 @@ export const xml2json = (body) => {
 export const getInfo = (data) => {
   const razonSocial = data.informe.infoRUC ? data.informe.infoRUC._attributes.tipoContribuyente : null
   const fechaCreacion = data.informe.infoRUC ? new Date(data.informe.infoRUC._attributes.fechaAlta - 5 * 60 * 60 * 1000).toString() : null
-  const padron = data.informe.buenosContribuyentes ? true : false
-  //const numTrabajadores = data.informe.otrosDatosEmpresa ? parseInt(data.informe.otrosDatosEmpresa.slice(-1)[0]._attributes.numeroEmpleados, 10) : null
+  const padron = data.informe.buenosContribuyentes
   let numTrabajadores = null
   if (data.informe.otrosDatosEmpresa) {
     const otrosDatosEmpresa = [...data.informe.otrosDatosEmpresa]
@@ -58,12 +57,16 @@ export const getInfo = (data) => {
   let calificacion = 0
   if (data.informe.endeudamientoSBS) {
     const endeudamientos = [...data.informe.endeudamientoSBS]
-    endeudamientos.sort((a,b) => {
-      if (a._attributes.fechaReporte < b._attributes.fechaReporte)  return 1
-      if (a._attributes.fechaReporte > b._attributes.fechaReporte)  return -1
+    endeudamientos.sort((a, b) => {
+      if (a._attributes.fechaReporte < b._attributes.fechaReporte) return 1
+      if (a._attributes.fechaReporte > b._attributes.fechaReporte) return -1
       return 0
     })
-    console.log(endeudamientos.slice(0, 10))
+    const lastReport = new Date(endeudamientos[0]._attributes.fechaReporte)
+    const startReport = new Date(+lastReport)
+    startReport.setMonth(startReport.getMonth() - 12)
+    console.log(lastReport)
+    console.log(startReport)
   }
   return {
     razonSocial,
