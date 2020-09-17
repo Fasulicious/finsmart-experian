@@ -64,7 +64,7 @@ export const getInfo = (data) => {
     })
     console.log(endeudamientos[0]._attributes.fechaReporte)
     console.log(typeof endeudamientos[0]._attributes.fechaReporte)
-    const lastReport = new Date(endeudamientos[0]._attributes.fechaReporte)
+    const lastReport = new Date(parseInt(endeudamientos[0]._attributes.fechaReporte, 10))
     const startReport = new Date(+lastReport)
     startReport.setMonth(startReport.getMonth() - 12)
     console.log(lastReport)
