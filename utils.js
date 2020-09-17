@@ -43,9 +43,10 @@ export const xml2json = (body) => {
 export const getInfo = (data) => {
   const razonSocial = data.informe.infoRuc._attributes.tipoContribuyente || null
   const fechaCreacion = new Date(data.informe.infoRuc._attributes.fechaAlta - 5 * 60 * 60 * 1000).toString() || null
-  //const padron = 
+  const padron = data.informe.buenosContribuyentes || null
   return {
     razonSocial,
     fechaCreacion,
+    padron,
   }
 }
