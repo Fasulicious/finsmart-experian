@@ -53,7 +53,17 @@ export const getInfo = (data) => {
       if (a._attributes.periodo > b._attributes.periodo) return 1
       return 0
     })
-    numTrabajadores = otrosDatosEmpresa.slice(-1)[0]._attributes.numeroEmpleados
+    numTrabajadores = parseInt(otrosDatosEmpresa.slice(-1)[0]._attributes.numeroEmpleados, 10)
+  }
+  let calificacion = 0
+  if (data.informe.endeudamientoSBS) {
+    const endeudamientos = [...data.informe.endeudamientoSBS]
+    endeudamientos.sort((a,b) => {
+      if (a._attributes.fechaReporte < b._attributes.fechaReporte)  return 1
+      if (a._attributes.fechaReporte > b._attributes.fechaReporte)  return -1
+      return 0
+    })
+    console.log(endeudamientos.slice(0, 10))
   }
   return {
     razonSocial,
