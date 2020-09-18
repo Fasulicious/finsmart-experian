@@ -62,13 +62,10 @@ export const getInfo = (data) => {
       if (a._attributes.fechaReporte > b._attributes.fechaReporte) return -1
       return 0
     })
-    console.log(endeudamientos[0]._attributes.fechaReporte)
-    console.log(typeof endeudamientos[0]._attributes.fechaReporte)
     const lastReport = new Date(parseInt(endeudamientos[0]._attributes.fechaReporte, 10))
     const startReport = new Date(+lastReport)
     startReport.setMonth(startReport.getMonth() - 12)
-    console.log(lastReport)
-    console.log(startReport)
+    console.log(endeudamientos.length)
   }
   return {
     razonSocial,
