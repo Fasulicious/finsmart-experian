@@ -64,10 +64,10 @@ export const getInfo = (data) => {
     })
     const lastReport = new Date(parseInt(endeudamientos[0]._attributes.fechaReporte, 10))
     const lastYear = lastReport.getFullYear()
-    // const startReport = new Date(+lastReport)
-    // startReport.setMonth(startReport.getMonth() - 12)
+    const startReport = new Date(+lastReport)
+    startReport.setMonth(startReport.getMonth() - 12)
     console.log(endeudamientos.length)
-    const lastYearEndeudamientos = endeudamientos.filter(endeudamiento => (new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))).getFullYear() == lastYear)
+    const lastYearEndeudamientos = endeudamientos.filter(endeudamiento => new Date(parseInt(endeudamiento._attributes.fechaReporte, 10)) > startReport)
     console.log(lastYearEndeudamientos.length)
     lastYearEndeudamientos.forEach(endeudamiento => {
       const currentReport = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
