@@ -71,47 +71,49 @@ export const getInfo = (data) => {
     const cal = new Array(12)
     cal.fill(0)
     lastYearEndeudamientos.forEach(endeudamiento => {
+      // console.log(endeudamiento._attributes.calificacion)
       const currentReport = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
       const diff = lastReport.getMonth() - currentReport.getMonth()
       switch (diff) {
         case 0:
-          cal[diff] += 1
+          cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
           break
         case 1:
-          cal[diff] += 1
+          cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
           break
         case 2:
-          cal[diff] += 1
+          cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
           break
         case 3:
-          cal[diff] += 1
+          cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
           break
         case 4:
-          cal[diff] += 1
+          cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
           break
         case 5:
-          cal[diff] += 1
+          cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
           break
         case 6:
-          cal[diff] += 1
+          cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
           break
         case 7:
-          cal[diff] += 1
+          cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
           break
         case 8:
-          cal[diff] += 1
+          cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
           break
         case 9:
-          cal[diff] += 1
+          cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
           break
         case 10:
-          cal[diff] += 1
+          cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
           break
         case -1:
-          cal[diff] += 1
+          cal[11] += parseInt(endeudamiento._attributes.calificacion, 10)
           break
       }
     })
+    console.log(cal)
   }
   return {
     razonSocial,
