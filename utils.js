@@ -70,13 +70,17 @@ export const getInfo = (data) => {
     startReport.setMonth(startReport.getMonth() - 12)
     console.log(endeudamientos.length)
     const lastYearEndeudamientos = endeudamientos.filter(endeudamiento => new Date(parseInt(endeudamiento._attributes.fechaReporte, 10)) > startReport)
+    // Calificacion stuff
     const Endeudamientos4Calificacion = lastYearEndeudamientos.filter(endeudamiento => !endeudamiento._attributes.codigoPUC.startsWith('84'))
     console.log(Endeudamientos4Calificacion.length)
     const cal = new Array(12)
     cal.fill(0)
     Endeudamientos4Calificacion.forEach(endeudamiento => {
-      const currentReport = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
-      const diff = lastReport.getMonth() - currentReport.getMonth()
+      const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
+      const diff = lastReport.getMonth() - currentDate.getMonth()
+      if (diff >= 0)  cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
+      else cal[diff + 12] += parseInt(endeudamiento._attributes.calificacion, 10)
+      /*
       switch (diff) {
         case 0:
           cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
@@ -115,9 +119,21 @@ export const getInfo = (data) => {
           cal[11] += parseInt(endeudamiento._attributes.calificacion, 10)
           break
       }
+      */
     })
     const lastYearCalification = cal.map(el => !!el)
     calificacion = lastYearCalification.reduce((acc, curr) => acc + curr, 0)
+    
+    // Deuda directa stuff
+    const Endeudamientos4Deudadirecta = endeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('14') || endeudamiento._attributes.codigoPUC.startsWith('81'))
+    console.log(Endeudamientos4Deudadirecta.length)
+    const dd = new Array(12)
+    Endeudamientos4Deudadirecta.forEach(endeudamiento => {
+      const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
+      const diff = lastReport.getMonth() - currentDate.getMonth()
+      if (diff >= 0)  dd[diff] += parseInt(endeudamiento._attributes.saldo, 10)
+      else dd[diff + 12] += parseInt(endeudamiento._attributes.saldo, 10)
+    })
   }
 
   return {
