@@ -121,6 +121,7 @@ export const getInfo = (data) => {
       }
       */
     })
+    console.log(cal)
     const lastYearCalification = cal.map(el => !!el)
     calificacion = lastYearCalification.reduce((acc, curr) => acc + curr, 0)
     
@@ -134,6 +135,7 @@ export const getInfo = (data) => {
       if (diff >= 0)  dd[diff] += parseInt(endeudamiento._attributes.saldo, 10)
       else dd[diff + 12] += parseInt(endeudamiento._attributes.saldo, 10)
     })
+    console.log(dd)
   }
 
   return {
