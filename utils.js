@@ -68,11 +68,11 @@ export const getInfo = (data) => {
     const lastReport = new Date(parseInt(endeudamientos[0]._attributes.fechaReporte, 10))
     const startReport = new Date(+lastReport)
     startReport.setMonth(startReport.getMonth() - 12)
-    console.log(endeudamientos.length)
+    // console.log(endeudamientos.length)
     const lastYearEndeudamientos = endeudamientos.filter(endeudamiento => new Date(parseInt(endeudamiento._attributes.fechaReporte, 10)) > startReport)
     // Calificacion stuff
     const Endeudamientos4Calificacion = lastYearEndeudamientos.filter(endeudamiento => !endeudamiento._attributes.codigoPUC.startsWith('84'))
-    console.log(Endeudamientos4Calificacion.length)
+    // console.log(Endeudamientos4Calificacion.length)
     const cal = new Array(12)
     cal.fill(0)
     Endeudamientos4Calificacion.forEach(endeudamiento => {
@@ -121,13 +121,13 @@ export const getInfo = (data) => {
       }
       */
     })
-    console.log(cal)
+    // console.log(cal)
     const lastYearCalification = cal.map(el => !!el)
     calificacion = lastYearCalification.reduce((acc, curr) => acc + curr, 0)
     
     // Deuda directa stuff
     const Endeudamientos4Deudadirecta = endeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('14') || endeudamiento._attributes.codigoPUC.startsWith('81'))
-    console.log(Endeudamientos4Deudadirecta.length)
+    // console.log(Endeudamientos4Deudadirecta.length)
     const dd = new Array(12)
     dd.fill(0.0)
     Endeudamientos4Deudadirecta.forEach(endeudamiento => {
@@ -136,8 +136,32 @@ export const getInfo = (data) => {
       if (diff >= 0)  dd[diff] += parseFloat(endeudamiento._attributes.saldo)
       else dd[diff + 12] += parseFloat(endeudamiento._attributes.saldo)
     })
-    console.log(dd)
+    // console.log(dd)
     deuda_directa = dd
+
+    // Deuda indirecta stuff
+    const Endeudamientos4dDeudaindirecta = endeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('71') || endeudamiento._attributes.codigoPUC.startsWith('72'))
+    const di = new Array(12)
+    di.fill(0.0)
+    Endeudamientos4dDeudaindirecta.forEach(endeudamiento => {
+      const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
+      const diff = lastReport.getMonth() - currentDate.getMonth()
+      if (diff >= 0)  di[diff] += parseFloat(endeudamiento._attributes.saldo)
+      else di[diff + 12] += parseFloat(endeudamiento._attributes.saldo)
+    })
+    deuda_indirecta = di
+
+    // Garantia Preferida stuff
+    const Endeudamientos4GarantiaPreferia = endeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('84'))
+    const gp = new Array(12)
+    gp.fill(0.0)
+    Endeudamientos4GarantiaPreferia.forEach(endeudamiento => {
+      const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
+      const diff = lastReport.getMonth() - currentDate.getMonth()
+      if (diff >= 0)  gp[diff] += parseFloat(endeudamiento._attributes.saldo)
+      else gp[diff + 12] += parseFloat(endeudamiento._attributes.saldo)
+    })
+    garantia_preferida = gp
   }
 
   return {
@@ -146,6 +170,8 @@ export const getInfo = (data) => {
     padron,
     numTrabajadores,
     calificacion,
-    deuda_directa
+    deuda_directa,
+    deuda_indirecta,
+    garantia_preferida
   }
 }
