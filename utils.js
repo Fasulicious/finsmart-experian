@@ -82,9 +82,6 @@ export const getInfo = (data) => {
           cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
           break
         case 2:
-          console.log(endeudamiento._attributes.calificacion)
-          console.log(endeudamiento._attributes.fechaReporte)
-          console.log(endeudamiento._attributes.saldo)
           cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
           break
         case 3:
