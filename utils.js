@@ -66,6 +66,12 @@ export const getInfo = (data) => {
     const startReport = new Date(+lastReport)
     startReport.setMonth(startReport.getMonth() - 12)
     console.log(endeudamientos.length)
+    endeudamientos.forEach(endeudamiento => {
+      currentReport = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
+      diff = lastReport.getMonth() - currentReport.getMonth()
+      cont = 0
+      console.log(diff)
+    })
   }
   return {
     razonSocial,
