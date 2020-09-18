@@ -113,7 +113,8 @@ export const getInfo = (data) => {
       }
     })
     const lastYearCalification = cal.map(el => !!el)
-    console.log(lastYearCalification)
+    calificacion = lastYearCalification.reduce((acc, curr) => acc + curr, 0)
+    console.log(calificacion)
   }
   return {
     razonSocial,
