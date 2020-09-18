@@ -75,40 +75,40 @@ export const getInfo = (data) => {
       const diff = lastReport.getMonth() - currentReport.getMonth()
       switch (diff) {
         case 0:
-          console.log(diff)
+          cal[diff] += 1
           break
         case 1:
-          console.log(diff)
+          cal[diff] += 1
           break
         case 2:
-          console.log(diff)
+          cal[diff] += 1
           break
         case 3:
-          console.log(diff)
+          cal[diff] += 1
           break
         case 4:
-          console.log(diff)
+          cal[diff] += 1
           break
         case 5:
-          console.log(diff)
+          cal[diff] += 1
           break
         case 6:
-          console.log(diff)
+          cal[diff] += 1
           break
         case 7:
-          console.log(diff)
+          cal[diff] += 1
           break
         case 8:
-          console.log(diff)
+          cal[diff] += 1
           break
         case 9:
-          console.log(diff)
+          cal[diff] += 1
           break
         case 10:
-          console.log(diff)
+          cal[diff] += 1
           break
         case -1:
-          console.log(diff)
+          cal[diff] += 1
           break
       }
     })
