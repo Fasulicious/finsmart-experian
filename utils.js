@@ -76,6 +76,8 @@ export const getInfo = (data) => {
       const diff = lastReport.getMonth() - currentReport.getMonth()
       switch (diff) {
         case 0:
+          console.log(endeudamiento._attributes.calificacion)
+          console.log(parseInt(endeudamiento._attributes.calificacion, 10))
           cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
           break
         case 1:
