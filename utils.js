@@ -71,7 +71,6 @@ export const getInfo = (data) => {
     const cal = new Array(12)
     cal.fill(0)
     lastYearEndeudamientos.forEach(endeudamiento => {
-      // console.log(endeudamiento._attributes.calificacion)
       const currentReport = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
       const diff = lastReport.getMonth() - currentReport.getMonth()
       switch (diff) {
@@ -113,7 +112,8 @@ export const getInfo = (data) => {
           break
       }
     })
-    console.log(cal)
+    const lastYearCalification = cal.map(el => !!el)
+    console.log(lastYearCalification)
   }
   return {
     razonSocial,
