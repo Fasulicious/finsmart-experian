@@ -132,8 +132,8 @@ export const getInfo = (data) => {
     Endeudamientos4Deudadirecta.forEach(endeudamiento => {
       const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
       const diff = lastReport.getMonth() - currentDate.getMonth()
-      if (diff >= 0)  dd[diff] += parseInt(endeudamiento._attributes.saldo, 10)
-      else dd[diff + 12] += parseInt(endeudamiento._attributes.saldo, 10)
+      if (diff >= 0)  dd[diff] += parseFloat(endeudamiento._attributes.saldo, 10)
+      else dd[diff + 12] += parseFloat(endeudamiento._attributes.saldo, 10)
     })
     console.log(dd)
   }
