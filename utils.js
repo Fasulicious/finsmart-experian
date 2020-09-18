@@ -66,7 +66,7 @@ export const getInfo = (data) => {
     const startReport = new Date(+lastReport)
     startReport.setMonth(startReport.getMonth() - 12)
     console.log(endeudamientos.length)
-    const lastYearEndeudamientos = endeudamientos.filter(endeudamiento => new Date(parseInt(endeudamiento._attributes.fechaReporte, 10)) > startReport)
+    const lastYearEndeudamientos = endeudamientos.filter(endeudamiento => ((new Date(parseInt(endeudamiento._attributes.fechaReporte, 10)) > startReport) && !endeudamiento._attributes.codigoPUC.startsWith('84')))
     console.log(lastYearEndeudamientos.length)
     const cal = new Array(12)
     cal.fill(0)
