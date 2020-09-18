@@ -69,11 +69,11 @@ export const getInfo = (data) => {
     console.log(endeudamientos.length)
     const lastYearEndeudamientos = endeudamientos.filter(endeudamiento => (new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))).getFullYear() == lastYear)
     console.log(lastYearEndeudamientos.length)
-    endeudamientos.forEach(endeudamiento => {
+    lastYearEndeudamientos.forEach(endeudamiento => {
       const currentReport = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
       const diff = lastReport.getMonth() - currentReport.getMonth()
       const cont = 0
-      // console.log(diff)
+      console.log(diff)
     })
   }
   return {
