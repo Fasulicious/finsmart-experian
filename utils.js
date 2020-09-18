@@ -55,6 +55,9 @@ export const getInfo = (data) => {
     numTrabajadores = parseInt(otrosDatosEmpresa.slice(-1)[0]._attributes.numeroEmpleados, 10)
   }
   let calificacion = 0
+  let deuda_directa = 0
+  let deuda_indirecta = 0
+  let garantia_preferida = 0
   if (data.informe.endeudamientoSBS) {
     const endeudamientos = [...data.informe.endeudamientoSBS]
     endeudamientos.sort((a, b) => {
@@ -66,11 +69,12 @@ export const getInfo = (data) => {
     const startReport = new Date(+lastReport)
     startReport.setMonth(startReport.getMonth() - 12)
     console.log(endeudamientos.length)
-    const lastYearEndeudamientos = endeudamientos.filter(endeudamiento => ((new Date(parseInt(endeudamiento._attributes.fechaReporte, 10)) > startReport) && !endeudamiento._attributes.codigoPUC.startsWith('84')))
-    console.log(lastYearEndeudamientos.length)
+    const lastYearEndeudamientos = endeudamientos.filter(endeudamiento => new Date(parseInt(endeudamiento._attributes.fechaReporte, 10)) > startReport)
+    const Endeudamientos4Calificacion = lastYearEndeudamientos.filter(endeudamiento => !endeudamiento._attributes.codigoPUC.startsWith('84'))
+    console.log(Endeudamientos4Calificacion.length)
     const cal = new Array(12)
     cal.fill(0)
-    lastYearEndeudamientos.forEach(endeudamiento => {
+    Endeudamientos4Calificacion.forEach(endeudamiento => {
       const currentReport = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
       const diff = lastReport.getMonth() - currentReport.getMonth()
       switch (diff) {
@@ -114,12 +118,13 @@ export const getInfo = (data) => {
     })
     const lastYearCalification = cal.map(el => !!el)
     calificacion = lastYearCalification.reduce((acc, curr) => acc + curr, 0)
-    console.log(calificacion)
   }
+
   return {
     razonSocial,
     fechaCreacion,
     padron,
-    numTrabajadores
+    numTrabajadores,
+    calificacion
   }
 }
