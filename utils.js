@@ -129,13 +129,15 @@ export const getInfo = (data) => {
     const Endeudamientos4Deudadirecta = endeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('14') || endeudamiento._attributes.codigoPUC.startsWith('81'))
     console.log(Endeudamientos4Deudadirecta.length)
     const dd = new Array(12)
+    dd.fill(0.0)
     Endeudamientos4Deudadirecta.forEach(endeudamiento => {
       const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
       const diff = lastReport.getMonth() - currentDate.getMonth()
-      if (diff >= 0)  dd[diff] += parseFloat(endeudamiento._attributes.saldo, 10)
-      else dd[diff + 12] += parseFloat(endeudamiento._attributes.saldo, 10)
+      if (diff >= 0)  dd[diff] += parseFloat(endeudamiento._attributes.saldo)
+      else dd[diff + 12] += parseFloat(endeudamiento._attributes.saldo)
     })
     console.log(dd)
+    deuda_directa = dd
   }
 
   return {
@@ -143,6 +145,7 @@ export const getInfo = (data) => {
     fechaCreacion,
     padron,
     numTrabajadores,
-    calificacion
+    calificacion,
+    deuda_directa
   }
 }
