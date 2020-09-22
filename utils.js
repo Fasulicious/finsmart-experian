@@ -80,54 +80,12 @@ export const getInfo = (data) => {
       const diff = lastReport.getMonth() - currentDate.getMonth()
       if (diff >= 0)  cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
       else cal[diff + 12] += parseInt(endeudamiento._attributes.calificacion, 10)
-      /*
-      switch (diff) {
-        case 0:
-          cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
-          break
-        case 1:
-          cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
-          break
-        case 2:
-          cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
-          break
-        case 3:
-          cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
-          break
-        case 4:
-          cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
-          break
-        case 5:
-          cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
-          break
-        case 6:
-          cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
-          break
-        case 7:
-          cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
-          break
-        case 8:
-          cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
-          break
-        case 9:
-          cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
-          break
-        case 10:
-          cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
-          break
-        case -1:
-          cal[11] += parseInt(endeudamiento._attributes.calificacion, 10)
-          break
-      }
-      */
     })
-    // console.log(cal)
     const lastYearCalification = cal.map(el => !!el)
     calificacion = lastYearCalification.reduce((acc, curr) => acc + curr, 0)
     
     // Deuda directa stuff
     const Endeudamientos4Deudadirecta = endeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('14') || endeudamiento._attributes.codigoPUC.startsWith('81'))
-    // console.log(Endeudamientos4Deudadirecta.length)
     const dd = new Array(12)
     dd.fill(0.0)
     Endeudamientos4Deudadirecta.forEach(endeudamiento => {
@@ -136,11 +94,10 @@ export const getInfo = (data) => {
       if (diff >= 0)  dd[diff] += parseFloat(endeudamiento._attributes.saldo)
       else dd[diff + 12] += parseFloat(endeudamiento._attributes.saldo)
     })
-    // console.log(dd)
     deuda_directa = dd
 
     // Deuda indirecta stuff
-    const Endeudamientos4dDeudaindirecta = endeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('71') || endeudamiento._attributes.codigoPUC.startsWith('72'))
+    const Endeudamientos4dDeudaindirecta = endeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('71'))
     const di = new Array(12)
     di.fill(0.0)
     Endeudamientos4dDeudaindirecta.forEach(endeudamiento => {
