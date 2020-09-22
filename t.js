@@ -17,7 +17,8 @@ temp = 0.0
 df.forEach(endeudamiento => {
   const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
   const diff = lastReport.getMonth() - currentDate.getMonth()
-  if (diff == 1) {
+  if (diff == 0) {
+    console.log(endeudamiento._attributes.codigoPUC)
     console.log(parseFloat(endeudamiento._attributes.saldo))
     temp += parseFloat(endeudamiento._attributes.saldo)
   }

@@ -70,7 +70,7 @@ export const getInfo = (data) => {
     startReport.setMonth(startReport.getMonth() - 12)
     // console.log(endeudamientos.length)
     const lastYearEndeudamientos = endeudamientos.filter(endeudamiento => new Date(parseInt(endeudamiento._attributes.fechaReporte, 10)) > startReport)
-    // Calificacion stuff
+    // CALIFICACION STUFF
     const Endeudamientos4Calificacion = lastYearEndeudamientos.filter(endeudamiento => !endeudamiento._attributes.codigoPUC.startsWith('84'))
     // console.log(Endeudamientos4Calificacion.length)
     const cal = new Array(12)
@@ -84,8 +84,8 @@ export const getInfo = (data) => {
     const lastYearCalification = cal.map(el => !!el)
     calificacion = lastYearCalification.reduce((acc, curr) => acc + curr, 0)
     
-    // Deuda directa stuff
-    const Endeudamientos4Deudadirecta = endeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('14') || endeudamiento._attributes.codigoPUC.startsWith('81'))
+    // DEUDA DIRECTA STUFF
+    const Endeudamientos4Deudadirecta = lastYearEndeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('14') || endeudamiento._attributes.codigoPUC.startsWith('81'))
     const dd = new Array(12)
     dd.fill(0.0)
     Endeudamientos4Deudadirecta.forEach(endeudamiento => {
@@ -96,8 +96,8 @@ export const getInfo = (data) => {
     })
     deuda_directa = dd
 
-    // Deuda indirecta stuff
-    const Endeudamientos4dDeudaindirecta = endeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('71'))
+    // DEUDA INDIRECTA STUFF
+    const Endeudamientos4dDeudaindirecta = lastYearEndeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('71'))
     const di = new Array(12)
     di.fill(0.0)
     Endeudamientos4dDeudaindirecta.forEach(endeudamiento => {
@@ -108,8 +108,8 @@ export const getInfo = (data) => {
     })
     deuda_indirecta = di
 
-    // Garantia Preferida stuff
-    const Endeudamientos4GarantiaPreferia = endeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('84'))
+    // GARANTIA PREFERIDA STUFF
+    const Endeudamientos4GarantiaPreferia = lastYearEndeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('84'))
     const gp = new Array(12)
     gp.fill(0.0)
     Endeudamientos4GarantiaPreferia.forEach(endeudamiento => {
