@@ -133,7 +133,8 @@ export const getInfo = (data) => {
     startReport.setMonth(startReport.getMonth() - 24)
     const filteredInformacionCCL = informacionCCL.filter(informacion => new Date(parseInt(informacion._attributes.fechaActualizacionDC, 10)) > startReport)
     const counter = filteredInformacionCCL.reduce((acc, curr) => {
-      if (!curr._attributes.fechaRegularizacion) acc += 1
+      if (!curr._attributes.fechaRegularizacion) return acc + 1
+      else return acc
     }, 0)
     protestosSinAclarar = counter
   }
