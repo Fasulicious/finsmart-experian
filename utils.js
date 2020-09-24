@@ -54,10 +54,11 @@ export const getInfo = (data) => {
     })
     numTrabajadores = parseInt(otrosDatosEmpresa.slice(-1)[0]._attributes.numeroEmpleados, 10)
   }
-  let calificacion = 0
-  let deuda_directa = 0
-  let deuda_indirecta = 0
-  let garantia_preferida = 0
+  let calificacion = null
+  let deudaDirecta = null
+  let deudaIndirecta = null
+  let garantiaPreferida = null
+  let protestosSinAclarar = null
   if (data.informe.endeudamientoSBS) {
     const endeudamientos = [...data.informe.endeudamientoSBS]
     endeudamientos.sort((a, b) => {
@@ -68,22 +69,21 @@ export const getInfo = (data) => {
     const lastReport = new Date(parseInt(endeudamientos[0]._attributes.fechaReporte, 10))
     const startReport = new Date(+lastReport)
     startReport.setMonth(startReport.getMonth() - 12)
-    // console.log(endeudamientos.length)
+
     const lastYearEndeudamientos = endeudamientos.filter(endeudamiento => new Date(parseInt(endeudamiento._attributes.fechaReporte, 10)) > startReport)
     // CALIFICACION STUFF
     const Endeudamientos4Calificacion = lastYearEndeudamientos.filter(endeudamiento => !endeudamiento._attributes.codigoPUC.startsWith('84'))
-    // console.log(Endeudamientos4Calificacion.length)
     const cal = new Array(12)
     cal.fill(0)
     Endeudamientos4Calificacion.forEach(endeudamiento => {
       const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
       const diff = lastReport.getMonth() - currentDate.getMonth()
-      if (diff >= 0)  cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
+      if (diff >= 0) cal[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
       else cal[diff + 12] += parseInt(endeudamiento._attributes.calificacion, 10)
     })
     const lastYearCalification = cal.map(el => !!el)
     calificacion = lastYearCalification.reduce((acc, curr) => acc + curr, 0)
-    
+
     // DEUDA DIRECTA STUFF
     const Endeudamientos4Deudadirecta = lastYearEndeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('14') || endeudamiento._attributes.codigoPUC.startsWith('81'))
     const dd = new Array(12)
@@ -91,10 +91,10 @@ export const getInfo = (data) => {
     Endeudamientos4Deudadirecta.forEach(endeudamiento => {
       const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
       const diff = lastReport.getMonth() - currentDate.getMonth()
-      if (diff >= 0)  dd[diff] += parseFloat(endeudamiento._attributes.saldo)
+      if (diff >= 0) dd[diff] += parseFloat(endeudamiento._attributes.saldo)
       else dd[diff + 12] += parseFloat(endeudamiento._attributes.saldo)
     })
-    deuda_directa = dd
+    deudaDirecta = dd
 
     // DEUDA INDIRECTA STUFF
     const Endeudamientos4dDeudaindirecta = lastYearEndeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('71'))
@@ -103,22 +103,39 @@ export const getInfo = (data) => {
     Endeudamientos4dDeudaindirecta.forEach(endeudamiento => {
       const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
       const diff = lastReport.getMonth() - currentDate.getMonth()
-      if (diff >= 0)  di[diff] += parseFloat(endeudamiento._attributes.saldo)
+      if (diff >= 0) di[diff] += parseFloat(endeudamiento._attributes.saldo)
       else di[diff + 12] += parseFloat(endeudamiento._attributes.saldo)
     })
-    deuda_indirecta = di
+    deudaIndirecta = di
 
     // GARANTIA PREFERIDA STUFF
-    const Endeudamientos4GarantiaPreferia = lastYearEndeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('84'))
+    const Endeudamientos4GarantiaPreferia = lastYearEndeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('84240201') || endeudamiento._attributes.codigoPUC.startsWith('84140201'))
     const gp = new Array(12)
     gp.fill(0.0)
     Endeudamientos4GarantiaPreferia.forEach(endeudamiento => {
       const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
       const diff = lastReport.getMonth() - currentDate.getMonth()
-      if (diff >= 0)  gp[diff] += parseFloat(endeudamiento._attributes.saldo)
+      if (diff >= 0) gp[diff] += parseFloat(endeudamiento._attributes.saldo)
       else gp[diff + 12] += parseFloat(endeudamiento._attributes.saldo)
     })
-    garantia_preferida = gp
+    garantiaPreferida = gp
+  }
+
+  if (data.informe.informacionCCL) {
+    const informacionCCL = [...data.informe.informacionCCL]
+    informacionCCL.sort((a, b) => {
+      if (a._attributes.fechaActualizacionDC < b._attributes.fechaActualizacionDC) return 1
+      if (a._attributes.fechaActualizacionDC > b._attributes.fechaActualizacionDC) return -1
+      return 0
+    })
+    const lastReport = new Date(parseInt(informacionCCL[0]._attributes.fechaActualizacionDC, 10))
+    const startReport = new Date(+lastReport)
+    startReport.setMonth(startReport.getMonth() - 24)
+    const filteredInformacionCCL = informacionCCL.filter(informacion => new Date(parseInt(informacion._attributes.fechaActualizacionDC, 10)) > startReport)
+    const counter = filteredInformacionCCL.reduce((acc, curr) => {
+      if (!curr._attributes.fechaRegularizacion) acc += 1
+    }, 0)
+    protestosSinAclarar = counter
   }
 
   return {
@@ -127,8 +144,9 @@ export const getInfo = (data) => {
     padron,
     numTrabajadores,
     calificacion,
-    deuda_directa,
-    deuda_indirecta,
-    garantia_preferida
+    deudaDirecta,
+    deudaIndirecta,
+    garantiaPreferida,
+    protestosSinAclarar
   }
 }
