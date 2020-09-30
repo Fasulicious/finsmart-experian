@@ -40,11 +40,13 @@ export const xml2json = (body) => {
   return dataJSON
 }
 
-export const getInfo = (data) => {
-  const razonSocial = data.informe.infoRUC ? data.informe.infoRUC._attributes.tipoContribuyente : null
-  const fechaCreacion = data.informe.infoRUC ? new Date(data.informe.infoRUC._attributes.fechaAlta - 5 * 60 * 60 * 1000).toString() : null
-  const padron = data.informe.buenosContribuyentes
-  let numTrabajadores = null
+const getRazonSocial = data => data.informe.infoRUC ? data.informe.informeRUC._attributes.tipoContribuyente : null
+
+const getFechaCreacion = data => data.informe.infoRUC ? new Date(data.informe.infoRUC._attributes.fechaAlta - 5 * 60 * 60 * 1000).toString() : null
+
+const getPadron = data => data.informe.buenosContribuyentes
+
+const getNumTrabajadores = data => {
   if (data.informe.otrosDatosEmpresa) {
     const otrosDatosEmpresa = [...data.informe.otrosDatosEmpresa]
     otrosDatosEmpresa.sort((a, b) => {
@@ -52,8 +54,16 @@ export const getInfo = (data) => {
       if (a._attributes.periodo > b._attributes.periodo) return 1
       return 0
     })
-    numTrabajadores = parseInt(otrosDatosEmpresa.slice(-1)[0]._attributes.numeroEmpleados, 10)
+    return parseInt(otrosDatosEmpresa.slice(-1)[0]._attributes.numeroEmpleados, 10)
   }
+  return null
+}
+
+export const getInfo = data => {
+  const razonSocial = getRazonSocial(data)
+  const fechaCreacion = getFechaCreacion(data)
+  const padron = getPadron(data)
+  const numTrabajadores = getNumTrabajadores(data)
   let calificacion = null
   let deudaDirecta = null
   let deudaIndirecta = null
@@ -73,7 +83,7 @@ export const getInfo = (data) => {
     startReport.setMonth(startReport.getMonth() - 12)
 
     const lastYearEndeudamientos = endeudamientos.filter(endeudamiento => new Date(parseInt(endeudamiento._attributes.fechaReporte, 10)) > startReport && endeudamiento._attributes.indicadorLectura === '0')
-    
+
     // CALIFICACION STUFF
     const Endeudamientos4Calificacion = lastYearEndeudamientos.filter(endeudamiento => !endeudamiento._attributes.codigoPUC.startsWith('84'))
     const cal = new Array(12)
