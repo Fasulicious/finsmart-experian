@@ -59,9 +59,25 @@ const getNumTrabajadores = data => {
   return null
 }
 
+const getCalificacion = (endeudamientos, lastReport) => {
+  const regex = /^84[12][401, 404, 403, 405, 410, 409, 5]/
+  const filtered = endeudamientos.filter(endeudamiento => regex.test(endeudamiento._attributes.codigoPUC))
+  const res = new Array(12)
+  res.fill(0)
+  filtered.forEach(endeudamiento => {
+    const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
+    const diff = lastReport.getMonth() - currentDate.getMonth()
+    if (diff >= 0) res[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
+    else res[diff + 12] += parseInt(endeudamiento._attributes.calificacion, 10)
+  })
+  const calificacion = res.map(el => !!el)
+  return calificacion.reduce((acc, curr) => acc + curr, 0)
+}
+
 const getDeudaDirecta = (endeudamientos, lastReport) => {
   const regex1 = /^14[12][13456]/
-  const filtered = endeudamientos.filter(endeudamiento => regex1.test(endeudamiento._attributes.codigoPUC))
+  const regex2 = /^81[12][302, 925]/
+  const filtered = endeudamientos.filter(endeudamiento => regex1.test(endeudamiento._attributes.codigoPUC) || regex2.test(endeudamiento._attributes.codigoPUC))
   const res = new Array(12)
   res.fill(0.0)
   filtered.forEach(endeudamiento => {
@@ -99,6 +115,8 @@ export const getInfo = data => {
     const lastYearEndeudamientos = endeudamientos.filter(endeudamiento => new Date(parseInt(endeudamiento._attributes.fechaReporte, 10)) > startReport && endeudamiento._attributes.indicadorLectura === '0')
 
     // CALIFICACION STUFF
+    calificacion = getCalificacion(lastYearEndeudamientos, lastReport)
+    /*
     const Endeudamientos4Calificacion = lastYearEndeudamientos.filter(endeudamiento => !endeudamiento._attributes.codigoPUC.startsWith('84'))
     const cal = new Array(12)
     cal.fill(0)
@@ -110,8 +128,9 @@ export const getInfo = data => {
     })
     const lastYearCalification = cal.map(el => !!el)
     calificacion = lastYearCalification.reduce((acc, curr) => acc + curr, 0)
-
+    */
     // DEUDA DIRECTA STUFF
+    deudaDirecta = getDeudaDirecta(lastYearEndeudamientos, lastReport)
     /*
     const Endeudamientos4Deudadirecta = lastYearEndeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('14') || endeudamiento._attributes.codigoPUC.startsWith('81'))
     const dd = new Array(12)
@@ -124,7 +143,7 @@ export const getInfo = data => {
     })
     deudaDirecta = dd
     */
-    deudaDirecta = getDeudaDirecta(lastYearEndeudamientos, lastReport)
+
     // DEUDA INDIRECTA STUFF
     const Endeudamientos4dDeudaindirecta = lastYearEndeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('71'))
     const di = new Array(12)
