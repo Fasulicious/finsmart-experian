@@ -59,10 +59,9 @@ const getNumTrabajadores = data => {
   return null
 }
 
-const getCalificacion = (lastYearEndeudamientos, lastReport) => {
-  /*
+const getCalificacion = (endeudamientos, lastReport) => {
   const regex = /^84[12][401, 404, 403, 405, 410, 409, 5]/
-  const filtered = endeudamientos.filter(endeudamiento => regex.test(endeudamiento._attributes.codigoPUC))
+  const filtered = endeudamientos.filter(endeudamiento => !regex.test(endeudamiento._attributes.codigoPUC))
   const res = new Array(12)
   res.fill(0)
   filtered.forEach(endeudamiento => {
@@ -73,7 +72,7 @@ const getCalificacion = (lastYearEndeudamientos, lastReport) => {
   })
   const calificacion = res.map(el => !!el)
   return calificacion.reduce((acc, curr) => acc + curr, 0)
-  */
+  /*
   const Endeudamientos4Calificacion = lastYearEndeudamientos.filter(endeudamiento => !endeudamiento._attributes.codigoPUC.startsWith('84'))
   const cal = new Array(12)
   cal.fill(0)
@@ -85,6 +84,7 @@ const getCalificacion = (lastYearEndeudamientos, lastReport) => {
   })
   const lastYearCalification = cal.map(el => !!el)
   return lastYearCalification.reduce((acc, curr) => acc + curr, 0)
+  */
 }
 
 const getDeudaDirecta = (endeudamientos, lastReport) => {
