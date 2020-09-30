@@ -59,14 +59,18 @@ const getNumTrabajadores = data => {
   return null
 }
 
+const getDiffMonths = (endeudamiento, lastReport) => {
+  const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte. 10))
+  return lastReport.getMonth() - currentDate.getMonth()
+}
+
 const getCalificacion = (endeudamientos, lastReport) => {
   const regex = /^84[12][401, 404, 403, 405, 410, 409, 5]/
   const filtered = endeudamientos.filter(endeudamiento => !regex.test(endeudamiento._attributes.codigoPUC))
   const res = new Array(12)
   res.fill(0)
   filtered.forEach(endeudamiento => {
-    const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
-    const diff = lastReport.getMonth() - currentDate.getMonth()
+    const diff = getDiffMonths(endeudamiento, lastReport)
     if (diff >= 0) res[diff] += parseInt(endeudamiento._attributes.calificacion, 10)
     else res[diff + 12] += parseInt(endeudamiento._attributes.calificacion, 10)
   })
@@ -157,32 +161,11 @@ export const getInfo = data => {
 
     const lastYearEndeudamientos = endeudamientos.filter(endeudamiento => new Date(parseInt(endeudamiento._attributes.fechaReporte, 10)) > startReport && endeudamiento._attributes.indicadorLectura === '0')
 
-    // CALIFICACION STUFF
     calificacion = getCalificacion(lastYearEndeudamientos, lastReport)
-
-    // DEUDA DIRECTA STUFF
     deudaDirecta = getDeudaDirecta(lastYearEndeudamientos, lastReport)
-
-    // DEUDA INDIRECTA STUFF
     deudaIndirecta = getDeudaIndirecta(lastYearEndeudamientos, lastReport)
-    
-    // GARANTIA PREFERIDA STUFF
     garantiaPreferida = getGarantiaPreferida(lastYearEndeudamientos, lastReport)
-
-    // PPP STUFF
     ppp = getPPP(lastYearEndeudamientos, lastReport)
-    /*
-    const Endeudamientos4PPP = lastYearEndeudamientos.filter(endeudamiento => !endeudamiento._attributes.codigoPUC.startsWith('84'))
-    ppp = new Array(12)
-    ppp.fill(0)
-    Endeudamientos4PPP.forEach(endeudamiento => {
-      const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
-      const diff = lastReport.getMonth() - currentDate.getMonth()
-      const days = parseInt(endeudamiento._attributes.condicion, 10)
-      if (diff >= 0) ppp[diff] = days > ppp[diff] ? days : ppp[diff]
-      else ppp[diff + 12] = days > ppp[diff + 12] ? days : ppp[diff + 12]
-    })
-    */
   }
 
   if (data.informe.informacionCCL) {
@@ -195,6 +178,7 @@ export const getInfo = data => {
     const lastReport = new Date(parseInt(informacionCCL[0]._attributes.fechaActualizacionDC, 10))
     const startReport = new Date(+lastReport)
     startReport.setMonth(startReport.getMonth() - 24)
+
     const filteredInformacionCCL = informacionCCL.filter(informacion => new Date(parseInt(informacion._attributes.fechaActualizacionDC, 10)) > startReport)
     const counter = filteredInformacionCCL.reduce((acc, curr) => {
       if (!curr._attributes.fechaRegularizacion) return acc + 1
