@@ -85,8 +85,7 @@ const getDeudaDirecta = (endeudamientos, lastReport) => {
   const res = new Array(12)
   res.fill(0.0)
   filtered.forEach(endeudamiento => {
-    const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
-    const diff = lastReport.getMonth() - currentDate.getMonth()
+    const diff = getDiffMonths(endeudamiento, lastReport)
     if (diff >= 0) res[diff] += parseFloat(endeudamiento._attributes.saldo)
     else res[diff + 12] += parseFloat(endeudamiento._attributes.saldo)
   })
