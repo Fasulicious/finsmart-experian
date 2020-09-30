@@ -103,6 +103,20 @@ const getDeudaIndirecta = (endeudamientos, lastReport) => {
   return res
 }
 
+const getGarantiaPreferida = (endeudamientos, lastReport) => {
+  const regex = /^84[12]40201/
+  const filtered = endeudamientos.filter(endeudamiento => regex.test(endeudamiento._attributes.codigoPUC))
+  const res = new Array(12)
+  res.fill(0.0)
+  filtered.forEach(endeudamiento => {
+    const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
+    const diff = lastReport.getMonth() - currentDate.getMonth()
+    if (diff >= 0) res[diff] += parseFloat(endeudamiento._attributes.saldo)
+    else res[diff + 12] += parseFloat(endeudamiento._attributes.saldo)
+  })
+  return res
+}
+
 export const getInfo = data => {
   const razonSocial = getRazonSocial(data)
   const fechaCreacion = getFechaCreacion(data)
@@ -136,19 +150,10 @@ export const getInfo = data => {
 
     // DEUDA INDIRECTA STUFF
     deudaIndirecta = getDeudaIndirecta(lastYearEndeudamientos, lastReport)
-    /*
-    const Endeudamientos4dDeudaindirecta = lastYearEndeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('71'))
-    const di = new Array(12)
-    di.fill(0.0)
-    Endeudamientos4dDeudaindirecta.forEach(endeudamiento => {
-      const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
-      const diff = lastReport.getMonth() - currentDate.getMonth()
-      if (diff >= 0) di[diff] += parseFloat(endeudamiento._attributes.saldo)
-      else di[diff + 12] += parseFloat(endeudamiento._attributes.saldo)
-    })
-    deudaIndirecta = di
-    */
+    
     // GARANTIA PREFERIDA STUFF
+    garantiaPreferida = getGarantiaPreferida(lastYearEndeudamientos, lastReport)
+    /*
     const Endeudamientos4GarantiaPreferia = lastYearEndeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('84240201') || endeudamiento._attributes.codigoPUC.startsWith('84140201'))
     const gp = new Array(12)
     gp.fill(0.0)
@@ -159,6 +164,7 @@ export const getInfo = data => {
       else gp[diff + 12] += parseFloat(endeudamiento._attributes.saldo)
     })
     garantiaPreferida = gp
+    */
 
     // PPP STUFF
     const Endeudamientos4PPP = lastYearEndeudamientos.filter(endeudamiento => !endeudamiento._attributes.codigoPUC.startsWith('84'))
