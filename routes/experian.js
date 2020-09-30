@@ -19,7 +19,7 @@ router.get('/:ruc', async ctx => {
   const info = getInfo(data)
   console.log(info)
   ctx.status = statusCode
-  ctx.body = data
+  ctx.body = info
 })
 
 export default router
