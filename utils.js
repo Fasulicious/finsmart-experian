@@ -60,7 +60,7 @@ const getNumTrabajadores = data => {
 }
 
 const getDiffMonths = (endeudamiento, lastReport) => {
-  const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte. 10))
+  const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
   return lastReport.getMonth() - currentDate.getMonth()
 }
 
