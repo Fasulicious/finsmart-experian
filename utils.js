@@ -59,6 +59,8 @@ export const getInfo = (data) => {
   let deudaIndirecta = null
   let garantiaPreferida = null
   let protestosSinAclarar = null
+  let ppp = null
+
   if (data.informe.endeudamientoSBS) {
     const endeudamientos = [...data.informe.endeudamientoSBS]
     endeudamientos.sort((a, b) => {
@@ -70,7 +72,8 @@ export const getInfo = (data) => {
     const startReport = new Date(+lastReport)
     startReport.setMonth(startReport.getMonth() - 12)
 
-    const lastYearEndeudamientos = endeudamientos.filter(endeudamiento => new Date(parseInt(endeudamiento._attributes.fechaReporte, 10)) > startReport)
+    const lastYearEndeudamientos = endeudamientos.filter(endeudamiento => new Date(parseInt(endeudamiento._attributes.fechaReporte, 10)) > startReport && endeudamiento._attributes.indicadorLectura === '0')
+    
     // CALIFICACION STUFF
     const Endeudamientos4Calificacion = lastYearEndeudamientos.filter(endeudamiento => !endeudamiento._attributes.codigoPUC.startsWith('84'))
     const cal = new Array(12)
@@ -119,6 +122,18 @@ export const getInfo = (data) => {
       else gp[diff + 12] += parseFloat(endeudamiento._attributes.saldo)
     })
     garantiaPreferida = gp
+
+    // PPP STUFF
+    const Endeudamientos4PPP = lastYearEndeudamientos.filter(endeudamiento => !endeudamiento._attributes.codigoPUC.startsWith('84'))
+    ppp = new Array(12)
+    ppp.fill(0)
+    Endeudamientos4PPP.forEach(endeudamiento => {
+      const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
+      const diff = lastReport.getMonth() - currentDate.getMonth()
+      const days = parseInt(endeudamiento._attributes.condicion, 10)
+      if (diff >= 0) ppp[diff] = days > ppp[diff] ? days : ppp[diff]
+      else ppp[diff + 12] = days > ppp[diff + 12] ? days : ppp[diff + 12]
+    })
   }
 
   if (data.informe.informacionCCL) {
@@ -148,6 +163,7 @@ export const getInfo = (data) => {
     deudaDirecta,
     deudaIndirecta,
     garantiaPreferida,
-    protestosSinAclarar
+    protestosSinAclarar,
+    ppp
   }
 }
