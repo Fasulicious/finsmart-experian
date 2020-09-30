@@ -40,7 +40,7 @@ export const xml2json = (body) => {
   return dataJSON
 }
 
-const getRazonSocial = data => data.informe.infoRUC ? data.informe.informeRUC._attributes.tipoContribuyente : null
+const getRazonSocial = data => data.informe.infoRUC ? data.informe.infoRUC._attributes.tipoContribuyente : null
 
 const getFechaCreacion = data => data.informe.infoRUC ? new Date(data.informe.infoRUC._attributes.fechaAlta - 5 * 60 * 60 * 1000).toString() : null
 
