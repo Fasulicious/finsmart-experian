@@ -44,7 +44,7 @@ const getRazonSocial = data => data.informe.infoRUC ? data.informe.infoRUC._attr
 
 const getFechaCreacion = data => data.informe.infoRUC ? new Date(data.informe.infoRUC._attributes.fechaAlta - 5 * 60 * 60 * 1000).toString() : null
 
-const getPadron = data => data.informe.buenosContribuyentes
+const getPadron = data => data.informe.buenosContribuyentes || null
 
 const getNumTrabajadores = data => {
   if (data.informe.otrosDatosEmpresa) {
