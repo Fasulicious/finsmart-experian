@@ -59,6 +59,20 @@ const getNumTrabajadores = data => {
   return null
 }
 
+const getDeudaDirecta = (endeudamientos, lastReport) => {
+  const regex1 = /^14[12][13456]/
+  const filtered = endeudamientos.filter(endeudamiento => regex1.test(endeudamiento._attributes.codigoPUC))
+  const res = new Array(12)
+  res.fill(0.0)
+  filtered.forEach(endeudamiento => {
+    const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
+    const diff = lastReport.getMonth() - currentDate.getMonth()
+    if (diff >= 0) res[diff] += parseFloat(endeudamiento._attributes.saldo)
+    else res[diff + 12] += parseFloat(endeudamiento._attributes.saldo)
+  })
+  return res
+}
+
 export const getInfo = data => {
   const razonSocial = getRazonSocial(data)
   const fechaCreacion = getFechaCreacion(data)
@@ -98,6 +112,7 @@ export const getInfo = data => {
     calificacion = lastYearCalification.reduce((acc, curr) => acc + curr, 0)
 
     // DEUDA DIRECTA STUFF
+    /*
     const Endeudamientos4Deudadirecta = lastYearEndeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('14') || endeudamiento._attributes.codigoPUC.startsWith('81'))
     const dd = new Array(12)
     dd.fill(0.0)
@@ -108,7 +123,8 @@ export const getInfo = data => {
       else dd[diff + 12] += parseFloat(endeudamiento._attributes.saldo)
     })
     deudaDirecta = dd
-
+    */
+    deudaDirecta = getDeudaDirecta(lastYearEndeudamientos, lastReport)
     // DEUDA INDIRECTA STUFF
     const Endeudamientos4dDeudaindirecta = lastYearEndeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('71'))
     const di = new Array(12)
