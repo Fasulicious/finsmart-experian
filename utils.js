@@ -117,6 +117,21 @@ const getGarantiaPreferida = (endeudamientos, lastReport) => {
   return res
 }
 
+const getPPP = (endeudamientos, lastReport) => {
+  const regex = /^84[12][401, 404, 403, 405, 410, 409, 5]/
+  const filtered = endeudamientos.filter(endeudamiento => !regex.test(endeudamiento._attributes.codigoPUC))
+  const res = new Array(12)
+  res.fill(0)
+  filtered.forEach(endeudamiento => {
+    const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
+    const diff = lastReport.getMonth() - currentDate.getMonth()
+    const days = parseInt(endeudamiento._attributes.condicion, 10)
+    if (diff >= 0) res[diff] = days > res[diff] ? days : res[diff]
+    else res[diff + 12] = days > res[diff + 12] ? days : res[diff + 12]
+  })
+  return res
+}
+
 export const getInfo = data => {
   const razonSocial = getRazonSocial(data)
   const fechaCreacion = getFechaCreacion(data)
@@ -153,20 +168,10 @@ export const getInfo = data => {
     
     // GARANTIA PREFERIDA STUFF
     garantiaPreferida = getGarantiaPreferida(lastYearEndeudamientos, lastReport)
-    /*
-    const Endeudamientos4GarantiaPreferia = lastYearEndeudamientos.filter(endeudamiento => endeudamiento._attributes.codigoPUC.startsWith('84240201') || endeudamiento._attributes.codigoPUC.startsWith('84140201'))
-    const gp = new Array(12)
-    gp.fill(0.0)
-    Endeudamientos4GarantiaPreferia.forEach(endeudamiento => {
-      const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
-      const diff = lastReport.getMonth() - currentDate.getMonth()
-      if (diff >= 0) gp[diff] += parseFloat(endeudamiento._attributes.saldo)
-      else gp[diff + 12] += parseFloat(endeudamiento._attributes.saldo)
-    })
-    garantiaPreferida = gp
-    */
 
     // PPP STUFF
+    ppp = getPPP(lastYearEndeudamientos, lastReport)
+    /*
     const Endeudamientos4PPP = lastYearEndeudamientos.filter(endeudamiento => !endeudamiento._attributes.codigoPUC.startsWith('84'))
     ppp = new Array(12)
     ppp.fill(0)
@@ -177,6 +182,7 @@ export const getInfo = data => {
       if (diff >= 0) ppp[diff] = days > ppp[diff] ? days : ppp[diff]
       else ppp[diff + 12] = days > ppp[diff + 12] ? days : ppp[diff + 12]
     })
+    */
   }
 
   if (data.informe.informacionCCL) {
