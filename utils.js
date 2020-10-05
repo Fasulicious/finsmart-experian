@@ -65,7 +65,7 @@ const getDiffMonths = (endeudamiento, lastReport) => {
 }
 
 const getCalificacion = (endeudamientos, lastReport) => {
-  const regex = /^84[12][401, 404, 403, 405, 410, 409, 5]/
+  const regex = /^84[12](401|404|403|405|410|409|5)/
   const filtered = endeudamientos.filter(endeudamiento => !regex.test(endeudamiento._attributes.codigoPUC))
   const res = new Array(12)
   res.fill(0)
@@ -79,8 +79,8 @@ const getCalificacion = (endeudamientos, lastReport) => {
 }
 
 const getDeudaDirecta = (endeudamientos, lastReport) => {
-  const regex1 = /^14[12][13456]/
-  const regex2 = /^81[12][302, 925]/
+  const regex1 = /^14[12](1|3|4|5|6)/
+  const regex2 = /^81[12](302|925)/
   const filtered = endeudamientos.filter(endeudamiento => regex1.test(endeudamiento._attributes.codigoPUC) || regex2.test(endeudamiento._attributes.codigoPUC))
   const res = new Array(12)
   res.fill(0.0)
@@ -93,7 +93,7 @@ const getDeudaDirecta = (endeudamientos, lastReport) => {
 }
 
 const getDeudaIndirecta = (endeudamientos, lastReport) => {
-  const regex = /^71[12][1234]/
+  const regex = /^71[12](1|2|3|4)/
   const filtered = endeudamientos.filter(endeudamiento => regex.test(endeudamiento._attributes.codigoPUC))
   const res = new Array(12)
   res.fill(0.0)
@@ -119,7 +119,7 @@ const getGarantiaPreferida = (endeudamientos, lastReport) => {
 }
 
 const getPPP = (endeudamientos, lastReport) => {
-  const regex = /^84[12][401, 404, 403, 405, 410, 409, 5]/
+  const regex = /^84[12](401|404|403|405|410|409|5)/
   const filtered = endeudamientos.filter(endeudamiento => !regex.test(endeudamiento._attributes.codigoPUC))
   const res = new Array(12)
   res.fill(0)
@@ -167,15 +167,15 @@ export const getInfo = data => {
   if (data.informe.informacionCCL) {
     const informacionCCL = [...data.informe.informacionCCL]
     informacionCCL.sort((a, b) => {
-      if (a._attributes.fechaActualizacionDC < b._attributes.fechaActualizacionDC) return 1
-      if (a._attributes.fechaActualizacionDC > b._attributes.fechaActualizacionDC) return -1
+      if (a._attributes.fechaVencimiento < b._attributes.fechaVencimiento) return 1
+      if (a._attributes.fechaVencimiento > b._attributes.fechaVencimiento) return -1
       return 0
     })
-    const lastReport = new Date(parseInt(informacionCCL[0]._attributes.fechaActualizacionDC, 10))
+    const lastReport = new Date(parseInt(informacionCCL[0]._attributes.fechaVencimiento, 10))
     const startReport = new Date(+lastReport)
     startReport.setMonth(startReport.getMonth() - 24)
 
-    const filteredInformacionCCL = informacionCCL.filter(informacion => new Date(parseInt(informacion._attributes.fechaActualizacionDC, 10)) > startReport)
+    const filteredInformacionCCL = informacionCCL.filter(informacion => new Date(parseInt(informacion._attributes.fechaVencimiento, 10)) > startReport)
     const counter = filteredInformacionCCL.reduce((acc, curr) => {
       if (!curr._attributes.fechaRegularizacion) return acc + 1
       else return acc
