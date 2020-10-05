@@ -75,7 +75,7 @@ const getCalificacion = (endeudamientos, lastReport) => {
     else res[diff + 12] += parseInt(endeudamiento._attributes.calificacion, 10)
   })
   const calificacion = res.map(el => !!el)
-  return calificacion.reduce((acc, curr) => acc + curr, 0)
+  return 12 - calificacion.reduce((acc, curr) => acc + curr, 0)
 }
 
 const getDeudaDirecta = (endeudamientos, lastReport) => {
