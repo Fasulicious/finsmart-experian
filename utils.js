@@ -164,7 +164,7 @@ export const getInfo = data => {
     ppp = getPPP(lastYearEndeudamientos, lastReport)
   }
 
-  if (data.informe.informacionCCL) {
+  if (Array.isArray(data.informe.informacionCCL)) {
     const informacionCCL = [...data.informe.informacionCCL]
     informacionCCL.sort((a, b) => {
       if (a._attributes.fechaVencimiento < b._attributes.fechaVencimiento) return 1
