@@ -119,7 +119,7 @@ const getGarantiaPreferida = (endeudamientos, lastReport) => {
 }
 
 const getPPP = (endeudamientos, lastReport) => {
-  const regex = /^84[12](401|404|403|405|410|409|5)/
+  const regex = /^84[12](401|402|404|403|405|410|409|5)/
   const filtered = endeudamientos.filter(endeudamiento => !regex.test(endeudamiento._attributes.codigoPUC))
   const res = new Array(12)
   res.fill(0)
