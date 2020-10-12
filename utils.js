@@ -191,9 +191,9 @@ export const getInfo = data => {
 
     const filteredInformacionCCL = informacionCCL.filter(informacion => new Date(parseInt(informacion._attributes.fechaVencimiento, 10)) > startReport)
     const counter = filteredInformacionCCL.reduce((acc, curr) => {
-      if (!curr._attributes.fechaRegularizacion) return acc + 1
+      if (!curr._attributes.fechaRegularizacion) return acc + parseFloat(curr._attributes.monto)
       else return acc
-    }, 0)
+    }, 0.0)
     protestosSinAclarar = counter
   }
 
