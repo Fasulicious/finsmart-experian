@@ -66,7 +66,7 @@ const getFechaCreacion = data => {
   if (!data.informe.infoRUC) return null
   const creationDate = new Date(parseInt(data.informe.infoRUC._attributes.fechaAlta, 10))
   let month = creationDate.getMonth() + 1
-  month = month.toString().length == 2 ? month.toString() : `0${month.toString()}`
+  month = month.toString().length === 2 ? month.toString() : `0${month.toString()}`
   return `${creationDate.getDate()}/${month}/${creationDate.getFullYear()}`
 }
 
@@ -164,7 +164,7 @@ const getPPP = (endeudamientos, lastReport) => {
     if (diff >= 0) res[diff] = days > res[diff] ? days : res[diff]
     else res[diff + 12] = days > res[diff + 12] ? days : res[diff + 12]
   })
-  return res
+  return (res.reduce((acc, curr) => acc + curr, 0)) / 12
 }
 
 export const getInfo = data => {
