@@ -11,7 +11,9 @@ import experian from './routes/experian'
 
 const app = new Koa()
 
-app.use(cors())
+app.use(cors({
+  origin: '190.237.1.236'
+}))
 app.use(body())
 app.use(logger())
 app.use(helmet())
