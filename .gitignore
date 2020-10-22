@@ -2,3 +2,4 @@ node_modules/
 t.js
 test.json
 res.json
+.env
