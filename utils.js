@@ -60,6 +60,7 @@ const getRazonSocial = data => {
   if (razonSocial === 'SOCIEDAD ANONIMA') return 'SA'
   if (razonSocial === 'SOC.COM.RESPONS. LTDA') return 'SRL'
   if (razonSocial === 'EMPRESA INDIVIDUAL DE RESP. LT') return 'EIRL'
+  if (razonSocial === 'UNIVERS. CENTROS EDUCAT. Y CUL') return 'SRL'
   return razonSocial
 }
 
@@ -191,12 +192,13 @@ export const getInfo = data => {
       return 0
     })
     const lastReport = new Date(parseInt(endeudamientos[0]._attributes.fechaReporte, 10))
-    const startReport = new Date(+lastReport)
-    // startReport.setMonth(startReport.getMonth() - 12)
-    startReport.setMonth(startReport.getMonth() - 1)
+    const lastYearStartReport = new Date(+lastReport)
+    const lastMonthStartReport = new Date(+lastReport)
+    lastYearStartReport.setMonth(lastYearStartReport.getMonth() - 12)
+    lastMonthStartReport.setMonth(lastMonthStartReport.getMonth() - 1)
 
-    const lastYearEndeudamientos = endeudamientos.filter(endeudamiento => new Date(parseInt(endeudamiento._attributes.fechaReporte, 10)) > startReport && endeudamiento._attributes.indicadorLectura === '0')
-    const lastMonthEndeudamientos = endeudamientos.filter(endeudamiento => new Date(parseInt(endeudamiento._attributes.fechaReporte, 10)) > startReport && endeudamiento._attributes.indicadorLectura === '0')
+    const lastYearEndeudamientos = endeudamientos.filter(endeudamiento => new Date(parseInt(endeudamiento._attributes.fechaReporte, 10)) > lastYearStartReport && endeudamiento._attributes.indicadorLectura === '0')
+    const lastMonthEndeudamientos = endeudamientos.filter(endeudamiento => new Date(parseInt(endeudamiento._attributes.fechaReporte, 10)) > lastMonthStartReport && endeudamiento._attributes.indicadorLectura === '0')
 
     calificacion = getCalificacion(lastYearEndeudamientos, lastReport)
     deudaDirecta = getDeudaDirecta(lastMonthEndeudamientos)
