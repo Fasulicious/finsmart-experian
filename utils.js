@@ -54,9 +54,19 @@ export const xml2json = (body) => {
   return dataJSON
 }
 
-const getRazonSocial = data => data.informe.infoRUC ? data.informe.infoRUC._attributes.tipoContribuyente : null
+const getRazonSocial = data => {
+  const razonSocial = data.informe.infoRUC ? data.informe.infoRUC._attributes.tipoContribuyente : null
+  if (razonSocial === 'SOCIEDAD ANONIMA CERRADA') return 'SAC'
+  if (razonSocial === 'SOCIEDAD ANONIMA') return 'SA'
+  return razonSocial
+}
 
-const getFechaCreacion = data => data.informe.infoRUC ? new Date(data.informe.infoRUC._attributes.fechaAlta - 5 * 60 * 60 * 1000).toString() : null
+const getFechaCreacion = data => {
+  // data.informe.infoRUC ? new Date(data.informe.infoRUC._attributes.fechaAlta - 5 * 60 * 60 * 1000).toString() : null
+  if (!data.informe.infoRUC) return null
+  const creationDate = new Date(data.informe.infoRUC._attributes.fechaAlta)
+  return `${creationDate.getDate()}/${creationDate.getMonth()}/${creationDate.getFullYear()}`
+}
 
 const getPadron = data => data.informe.buenosContribuyentes ? true : null
 
@@ -96,6 +106,8 @@ const getDeudaDirecta = (endeudamientos, lastReport) => {
   const regex1 = /^14[12](1|3|4|5|6)/
   const regex2 = /^81[12](302|925)/
   const filtered = endeudamientos.filter(endeudamiento => regex1.test(endeudamiento._attributes.codigoPUC) || regex2.test(endeudamiento._attributes.codigoPUC))
+  return filtered.reduce((acc, curr) => acc + parseFloat(curr._attributes.saldo), 0.0)
+  /*
   const res = new Array(12)
   res.fill(0.0)
   filtered.forEach(endeudamiento => {
@@ -104,6 +116,7 @@ const getDeudaDirecta = (endeudamientos, lastReport) => {
     else res[diff + 12] += parseFloat(endeudamiento._attributes.saldo)
   })
   return res
+  */
 }
 
 const getDeudaIndirecta = (endeudamientos, lastReport) => {
@@ -167,14 +180,16 @@ export const getInfo = data => {
     })
     const lastReport = new Date(parseInt(endeudamientos[0]._attributes.fechaReporte, 10))
     const startReport = new Date(+lastReport)
-    startReport.setMonth(startReport.getMonth() - 12)
+    // startReport.setMonth(startReport.getMonth() - 12)
+    startReport.setMonth(startReport.getMonth() - 1)
 
     const lastYearEndeudamientos = endeudamientos.filter(endeudamiento => new Date(parseInt(endeudamiento._attributes.fechaReporte, 10)) > startReport && endeudamiento._attributes.indicadorLectura === '0')
+    const lastMonthEndeudamientos = endeudamientos.filter(endeudamiento => new Date(parseInt(endeudamiento._attributes.fechaReporte, 10)) > startReport && endeudamiento._attributes.indicadorLectura === '0')
 
     calificacion = getCalificacion(lastYearEndeudamientos, lastReport)
-    deudaDirecta = getDeudaDirecta(lastYearEndeudamientos, lastReport)
-    deudaIndirecta = getDeudaIndirecta(lastYearEndeudamientos, lastReport)
-    garantiaPreferida = getGarantiaPreferida(lastYearEndeudamientos, lastReport)
+    deudaDirecta = getDeudaDirecta(lastMonthEndeudamientos, lastReport)
+    deudaIndirecta = getDeudaIndirecta(lastMonthEndeudamientos, lastReport)
+    garantiaPreferida = getGarantiaPreferida(lastMonthEndeudamientos, lastReport)
     ppp = getPPP(lastYearEndeudamientos, lastReport)
   }
 
