@@ -65,9 +65,11 @@ const getFechaCreacion = data => {
   // data.informe.infoRUC ? new Date(data.informe.infoRUC._attributes.fechaAlta - 5 * 60 * 60 * 1000).toString() : null
   if (!data.informe.infoRUC) return null
   const creationDate = new Date(parseInt(data.informe.infoRUC._attributes.fechaAlta, 10))
+  let day = creationDate.getDate()
+  day = day.toString().length === 2 ? day.toString() : `0${day.toString()}`
   let month = creationDate.getMonth() + 1
   month = month.toString().length === 2 ? month.toString() : `0${month.toString()}`
-  return `${creationDate.getDate()}/${month}/${creationDate.getFullYear()}`
+  return `${day}/${month}/${creationDate.getFullYear()}`
 }
 
 const getPadron = data => data.informe.buenosContribuyentes ? true : null
