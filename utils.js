@@ -64,7 +64,7 @@ const getRazonSocial = data => {
 const getFechaCreacion = data => {
   // data.informe.infoRUC ? new Date(data.informe.infoRUC._attributes.fechaAlta - 5 * 60 * 60 * 1000).toString() : null
   if (!data.informe.infoRUC) return null
-  const creationDate = new Date(data.informe.infoRUC._attributes.fechaAlta)
+  const creationDate = new Date(parseInt(data.informe.infoRUC._attributes.fechaAlta, 10))
   return `${creationDate.getDate()}/${creationDate.getMonth()}/${creationDate.getFullYear()}`
 }
 
