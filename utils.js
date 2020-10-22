@@ -103,7 +103,7 @@ const getCalificacion = (endeudamientos, lastReport) => {
   return 12 - calificacion.reduce((acc, curr) => acc + curr, 0)
 }
 
-const getDeudaDirecta = (endeudamientos, lastReport) => {
+const getDeudaDirecta = endeudamientos => {
   const regex1 = /^14[12](1|3|4|5|6)/
   const regex2 = /^81[12](302|925)/
   const filtered = endeudamientos.filter(endeudamiento => regex1.test(endeudamiento._attributes.codigoPUC) || regex2.test(endeudamiento._attributes.codigoPUC))
@@ -120,9 +120,11 @@ const getDeudaDirecta = (endeudamientos, lastReport) => {
   */
 }
 
-const getDeudaIndirecta = (endeudamientos, lastReport) => {
+const getDeudaIndirecta = endeudamientos => {
   const regex = /^71[12](1|2|3|4)/
   const filtered = endeudamientos.filter(endeudamiento => regex.test(endeudamiento._attributes.codigoPUC))
+  return filtered.reduce((acc, curr) => acc + parseFloat(curr._attributes.saldo), 0.0)
+  /*
   const res = new Array(12)
   res.fill(0.0)
   filtered.forEach(endeudamiento => {
@@ -131,11 +133,14 @@ const getDeudaIndirecta = (endeudamientos, lastReport) => {
     else res[diff + 12] += parseFloat(endeudamiento._attributes.saldo)
   })
   return res
+  */
 }
 
-const getGarantiaPreferida = (endeudamientos, lastReport) => {
+const getGarantiaPreferida = endeudamientos => {
   const regex = /^84[12]40201/
   const filtered = endeudamientos.filter(endeudamiento => regex.test(endeudamiento._attributes.codigoPUC))
+  return filtered.reduce((acc, curr) => acc + parseFloat(curr._attributes.saldo), 0.0)
+  /*
   const res = new Array(12)
   res.fill(0.0)
   filtered.forEach(endeudamiento => {
@@ -144,6 +149,7 @@ const getGarantiaPreferida = (endeudamientos, lastReport) => {
     else res[diff + 12] += parseFloat(endeudamiento._attributes.saldo)
   })
   return res
+  */
 }
 
 const getPPP = (endeudamientos, lastReport) => {
@@ -188,9 +194,9 @@ export const getInfo = data => {
     const lastMonthEndeudamientos = endeudamientos.filter(endeudamiento => new Date(parseInt(endeudamiento._attributes.fechaReporte, 10)) > startReport && endeudamiento._attributes.indicadorLectura === '0')
 
     calificacion = getCalificacion(lastYearEndeudamientos, lastReport)
-    deudaDirecta = getDeudaDirecta(lastMonthEndeudamientos, lastReport)
-    deudaIndirecta = getDeudaIndirecta(lastMonthEndeudamientos, lastReport)
-    garantiaPreferida = getGarantiaPreferida(lastMonthEndeudamientos, lastReport)
+    deudaDirecta = getDeudaDirecta(lastMonthEndeudamientos)
+    deudaIndirecta = getDeudaIndirecta(lastMonthEndeudamientos)
+    garantiaPreferida = getGarantiaPreferida(lastMonthEndeudamientos)
     ppp = getPPP(lastYearEndeudamientos, lastReport)
   }
 
