@@ -58,6 +58,8 @@ const getRazonSocial = data => {
   const razonSocial = data.informe.infoRUC ? data.informe.infoRUC._attributes.tipoContribuyente : null
   if (razonSocial === 'SOCIEDAD ANONIMA CERRADA') return 'SAC'
   if (razonSocial === 'SOCIEDAD ANONIMA') return 'SA'
+  if (razonSocial === 'SOC.COM.RESPONS. LTDA') return 'SRL'
+  if (razonSocial === 'EMPRESA INDIVIDUAL DE RESP. LT') return 'EIRL'
   return razonSocial
 }
 
