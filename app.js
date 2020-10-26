@@ -10,6 +10,10 @@ import ip from 'koa-ip'
 
 import experian from './routes/experian'
 
+const {
+  boIP
+} = process.env
+
 const app = new Koa()
 
 app.use(cors())
@@ -17,7 +21,7 @@ app.use(body())
 app.use(logger())
 app.use(helmet())
 app.use(compress())
-app.use(ip('190.237.1.236'))
+app.use(ip(boIP))
 
 app.use(async (ctx, next) => {
   try {

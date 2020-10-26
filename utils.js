@@ -4,7 +4,9 @@ import soapRequest from 'easy-soap-request'
 import convert from 'xml-js'
 
 const {
-  experianURL
+  experianURL,
+  experianUSER,
+  experianPASS
 } = process.env
 
 /*
@@ -25,8 +27,8 @@ export const makeXMLBody = (ruc) => `<soapenv:Envelope xmlns:xsi="http://www.w3.
    <soapenv:Header/>
    <soapenv:Body>
       <ws:consultar soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
-         <idsus xsi:type="soapenc:string" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">47078837</idsus>
-            <clasus xsi:type="soapenc:string" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">00NIK</clasus>
+         <idsus xsi:type="soapenc:string" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">${experianUSER}</idsus>
+            <clasus xsi:type="soapenc:string" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">${experianPASS}</clasus>
             <tipoid xsi:type="soapenc:string" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">2</tipoid>
             <id xsi:type="soapenc:string" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">${ruc}</id>
             <papellido xsi:type="soapenc:string" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"></papellido>            
