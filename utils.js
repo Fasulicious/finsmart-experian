@@ -94,7 +94,7 @@ const getNumTrabajadores = data => {
 
 const getDiffMonths = (endeudamiento, lastReport) => {
   const currentDate = new Date(parseInt(endeudamiento._attributes.fechaReporte, 10))
-  return lastReport.getMonth() - currentDate.getMonth()
+  return currentDate.getFullYear() === lastReport.getFullYear() ? lastReport.getMonth() - currentDate.getMonth() : 12 + lastReport.getMonth() - currentDate.getMonth()
 }
 
 const getCalificacion = (endeudamientos, lastReport) => {
@@ -161,8 +161,8 @@ const getGarantiaPreferida = endeudamientos => {
 }
 
 const getPPP = (endeudamientos, lastReport) => {
-  const regex = /^84[12](401|402|404|403|405|410|409|5)/
-  const filtered = endeudamientos.filter(endeudamiento => !regex.test(endeudamiento._attributes.codigoPUC))
+  const regex = /^14[12]5/
+  const filtered = endeudamientos.filter(endeudamiento => regex.test(endeudamiento._attributes.codigoPUC))
   const res = new Array(12)
   res.fill(0)
   filtered.forEach(endeudamiento => {
