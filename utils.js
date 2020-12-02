@@ -243,8 +243,8 @@ export const getInfo = data => {
 export const getPadron = async ruc => {
   const url = `https://dniruc.apisperu.com/api/v1/ruc/${ruc}?token=${token}`
   const { data } = await axios.get(url)
-  if (data) {
-    console.log(data.padrones)
-  }
-  return null
+  if (!data || !data.padrones) return null
+  const padrones = data.padrones
+  if (padrones.length === 1 && padrones[0] === 'NINGUNO') return '-'
+  console.log(padrones)
 }
