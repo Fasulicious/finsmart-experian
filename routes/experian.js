@@ -22,7 +22,10 @@ router.get('/:ruc', async ctx => {
   console.log(info)
   console.log(padron)
   ctx.status = statusCode
-  ctx.body = info
+  ctx.body = {
+    ...info,
+    padron
+  }
 })
 
 export default router
