@@ -295,7 +295,5 @@ export const getPadron = async ruc => {
     if (a.date > b.date) return 1
     return 0
   })
-  console.log('sorted')
-  console.log(filtered)
-  return '-'
+  return filtered.slice(-1)[0].type
 }
