@@ -282,5 +282,6 @@ export const getPadron = async ruc => {
     }
   })
   console.log(padrones)
+  console.log(details)
   return '-'
 }
