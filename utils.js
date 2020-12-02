@@ -243,19 +243,19 @@ export const getInfo = data => {
 export const getPadron = async ruc => {
   const url = `https://dniruc.apisperu.com/api/v1/ruc/${ruc}?token=${token}`
   const { data } = await axios.get(url)
-  if (!data || !data.padrones) return null
+  if (!data || !data.padrones) return '-'
   const padrones = data.padrones
   if (padrones.length === 1 && padrones[0] === 'NINGUNO') return '-'
   const details = {
-    'retencion': {
+    retencion: {
       active: false,
       date: null
     },
-    'percepcion': {
+    percepcion: {
       active: false,
       date: null
     },
-    'buen contribuyente': {
+    contribuyente: {
       active: false,
       date: null
     }
@@ -265,5 +265,22 @@ export const getPadron = async ruc => {
     if (new Date(a.slice(-4), a.slice(-7, -5) - 1, a.slice(-10, -8)) > new Date(b.slice(-4), b.slice(-7, -5) - 1, b.slice(-10, -8))) return 1
     return 0
   })
+  padrones.forEach(padron => {
+    const date = new Date(padron.slice(-4), padron.slice(-7, -5) - 1, padron.slice(-10, -8))
+    const active = padron.includes('Incorporado')
+    if (padron.includes('Agentes de Retención')) {
+      details.retencion.active = active
+      details.retencion.date = date
+    }
+    if (padron.includes('Agentes de Percepción')) {
+      details.percepcion.active = active
+      details.percepcion.date = date
+    }
+    if (padron.includes('Buenos Contribuyentes')) {
+      details.contribuyente.active = active
+      details.contribuyente.date = date
+    }
+  })
   console.log(padrones)
+  return '-'
 }
