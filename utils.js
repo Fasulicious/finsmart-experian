@@ -246,5 +246,24 @@ export const getPadron = async ruc => {
   if (!data || !data.padrones) return null
   const padrones = data.padrones
   if (padrones.length === 1 && padrones[0] === 'NINGUNO') return '-'
+  const details = {
+    'retencion': {
+      active: false,
+      date: null
+    },
+    'percepcion': {
+      active: false,
+      date: null
+    },
+    'buen contribuyente': {
+      active: false,
+      date: null
+    }
+  }
+  padrones.sort((a, b) => {
+    if (new Date(a.slice(-4), a.slice(-7, -5) - 1, a.slice(-10, -8)) < new Date(b.slice(-4), b.slice(-7, -5) - 1, b.slice(-10, -8))) return -1
+    if (new Date(a.slice(-4), a.slice(-7, -5) - 1, a.slice(-10, -8)) > new Date(b.slice(-4), b.slice(-7, -5) - 1, b.slice(-10, -8))) return 1
+    return 0
+  })
   console.log(padrones)
 }
