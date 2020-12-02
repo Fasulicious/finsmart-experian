@@ -18,7 +18,7 @@ router.get('/:ruc', async ctx => {
   const { response: { body, statusCode } } = await makeXMLRequest(xml)
   const data = xml2json(body)
   const info = getInfo(data)
-  const padron = getPadron(ruc)
+  const padron = await getPadron(ruc)
   console.log(info)
   console.log(padron)
   ctx.status = statusCode
