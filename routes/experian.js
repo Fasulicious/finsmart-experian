@@ -6,7 +6,8 @@ import {
   makeXMLBody,
   makeXMLRequest,
   xml2json,
-  getInfo
+  getInfo,
+  getPadron
 } from '../utils'
 
 const router = new Router({ prefix: '/experian' })
@@ -17,7 +18,9 @@ router.get('/:ruc', async ctx => {
   const { response: { body, statusCode } } = await makeXMLRequest(xml)
   const data = xml2json(body)
   const info = getInfo(data)
+  const padron = getPadron(ruc)
   console.log(info)
+  console.log(padron)
   ctx.status = statusCode
   ctx.body = info
 })

@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.0",
     "easy-soap-request": "^3.3.2",
     "esm": "^3.2.25",
     "koa": "^2.13.0",

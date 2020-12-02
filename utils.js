@@ -2,11 +2,13 @@
 
 import soapRequest from 'easy-soap-request'
 import convert from 'xml-js'
+import axios from 'axios'
 
 const {
   experianURL,
   experianUSER,
-  experianPASS
+  experianPASS,
+  token
 } = process.env
 
 /*
@@ -76,8 +78,6 @@ const getFechaCreacion = data => {
   month = month.toString().length === 2 ? month.toString() : `0${month.toString()}`
   return `${day}/${month}/${creationDate.getFullYear()}`
 }
-
-const getPadron = data => data.informe.buenosContribuyentes ? true : null
 
 const getNumTrabajadores = data => {
   if (data.informe.otrosDatosEmpresa) {
@@ -177,7 +177,6 @@ const getPPP = (endeudamientos, lastReport) => {
 export const getInfo = data => {
   const razonSocial = getRazonSocial(data)
   const fechaCreacion = getFechaCreacion(data)
-  const padron = getPadron(data)
   const numTrabajadores = getNumTrabajadores(data)
   let calificacion = null
   let deudaDirecta = null
@@ -231,7 +230,6 @@ export const getInfo = data => {
   return {
     razonSocial,
     fechaCreacion,
-    padron,
     numTrabajadores,
     calificacion,
     deudaDirecta,
@@ -240,4 +238,11 @@ export const getInfo = data => {
     protestosSinAclarar,
     ppp
   }
+}
+
+export const getpadron = async ruc => {
+  const url = `https://dniruc.apisperu.com/api/v1/ruc/${ruc}?token=${token}`
+  const response = await axios.get(url)
+  console.log(response)
+  return null
 }
