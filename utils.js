@@ -246,20 +246,23 @@ export const getPadron = async ruc => {
   if (!data || !data.padrones) return '-'
   const padrones = data.padrones
   if (padrones.length === 1 && padrones[0] === 'NINGUNO') return '-'
-  const details = {
-    retencion: {
+  const details = [
+    // retencion
+    {
       active: false,
       date: null
     },
-    percepcion: {
+    // percepcion
+    {
       active: false,
       date: null
     },
-    contribuyente: {
+    // contribuyente
+    {
       active: false,
       date: null
     }
-  }
+  ]
   padrones.sort((a, b) => {
     if (new Date(a.slice(-4), a.slice(-7, -5) - 1, a.slice(-10, -8)) < new Date(b.slice(-4), b.slice(-7, -5) - 1, b.slice(-10, -8))) return -1
     if (new Date(a.slice(-4), a.slice(-7, -5) - 1, a.slice(-10, -8)) > new Date(b.slice(-4), b.slice(-7, -5) - 1, b.slice(-10, -8))) return 1
@@ -269,19 +272,21 @@ export const getPadron = async ruc => {
     const date = new Date(padron.slice(-4), padron.slice(-7, -5) - 1, padron.slice(-10, -8))
     const active = padron.includes('Incorporado')
     if (padron.includes('Agentes de Retención')) {
-      details.retencion.active = active
-      details.retencion.date = date
+      details[0].active = active
+      details[0].date = date
     }
     if (padron.includes('Agentes de Percepción')) {
-      details.percepcion.active = active
-      details.percepcion.date = date
+      details[1].active = active
+      details[1].date = date
     }
     if (padron.includes('Buenos Contribuyentes')) {
-      details.contribuyente.active = active
-      details.contribuyente.date = date
+      details[2].active = active
+      details[2].date = date
     }
   })
   console.log(padrones)
   console.log(details)
+  const filtered = details.filter(padron => padron.active)
+  console.log(filtered)
   return '-'
 }
