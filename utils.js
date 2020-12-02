@@ -247,19 +247,19 @@ export const getPadron = async ruc => {
   const padrones = data.padrones
   if (padrones.length === 1 && padrones[0] === 'NINGUNO') return '-'
   const details = [
-    // retencion
     {
       active: false,
+      type: 'Agente de Retención',
       date: null
     },
-    // percepcion
     {
       active: false,
+      type: 'Agente de Percepción',
       date: null
     },
-    // contribuyente
     {
       active: false,
+      type: 'Buen Contribuyente',
       date: null
     }
   ]
@@ -287,6 +287,15 @@ export const getPadron = async ruc => {
   console.log(padrones)
   console.log(details)
   const filtered = details.filter(padron => padron.active)
+  console.log(filtered)
+  if (filtered.length === 0) return '-'
+  if (filtered.length === 1) return filtered[0].type
+  filtered.sort((a, b) => {
+    if (a.date < b.date) return -1
+    if (a.date > b.date) return 1
+    return 0
+  })
+  console.log('sorted')
   console.log(filtered)
   return '-'
 }
